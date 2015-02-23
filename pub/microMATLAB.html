@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>microMATLAB</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- http://matlabtricks.com/matlab-highlighter -->
+<style type="text/css">
+<!--
+body {min-height: 100%; max-width: 800px; margin: 0 auto; font-size: 11pt; font-family: "Verdana", sans-serif;}
+-->
+body {min-height: 100%; max-width: 800px; margin: 0 auto; font-size: 11pt; font-family: "PT Serif",Georgia,"Times New Roman",serif;}
+div.title {font-style: normal; font-family: "Cambria",Palatino,serif; font-size: 20pt; color: #000080;}
+div.subtitle {font-style: normal; font-family: "Cambria",Palatino,serif; font-size: 16pt; color: #000080;}
+pre {font-size: 12pt; font-family: proggy, consolas, monospace; background-color:#eee; <!-- overflow: auto -->padding: 0.2em; border: 1px solid #bbb;}
+pre.blank {background-color:#fff; font-family: proggy, consolas, monospace; border:none}
+code {font-size: 12pt; font-family: proggy, consolas, monospace;}
+.gul {background-color: #ff8; }
+.kom {color: #0b0;}
+.eksempel {border-left-style: solid; border-color: #0b0; padding-left: 8px;}
+.oppgaver {background-color:#dfd;}
+
+<!--
+#visskjul {display: none; }
+.show:focus + .hide {display: inline; }
+.show:focus + .hide + #visskjul {display: block;}
+-->
+
+</style>
+<script type="text/x-mathjax-config"> MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}}); </script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"> </script>
+</head>
+<!-- <body onload="highlightMATLABCode();"> -->
+<body>
+<div class="title">microMATLAB</div>
+<sup>(cc) Tore Gaupseth 20152401 09:39</sup>
+<ul>
+<li><a href="#kalkula">MATLAB som kalkulator</a></li>
+<li><a href="#operato">Operatorer, regnerekkefølge</a></li>
+<li><a href="#funksjo">Noen funksjoner</a></li>
+<li><a href="#variabl">Variabler, tilordning</a></li>
+<li><a href="#tallfor">Tallformat</a></li>
+<li><a href="#komplek">Komplekse tall</a></li>
+<li><a href="#matrise">Matriser, vektorer og skalarer</a></li>
+<li><a href="#plottin">Plotting</a></li>
+<li><a href="#vektore">Vektorer i fysikk og matematikk</a></li>
+<li><a href="#polynom">Polynomer</a></li>
+<li><a href="#delbrok">Delbrøkspalting og polynomdivisjon</a></li>
+<li><a href="#likning">Likninger</a></li>
+<li><a href="#tallfol">Tallfølger og rekker</a></li>
+<li><a href="#symbols">Symbolsk matematikk med MATLAB</a></li>
+</ul>
+<p>
+Velkommen til et lynkurs i MATLAB.<br>
+MATLAB er et universalverktøy til matematisk analyse og simulering. I utgangspunktet er det en tallknuser som gjør numeriske beregninger, men er etter hvert blitt utvidet med tilleggspakker til bruk i utallige fagområder i vitenskap og ingeniørfag. En av disse utvidelsene er Symbolic Toolbox som lar oss utføre algebraiske operasjoner, den blir kort presentert til slutt i dette kurset.
+<br>
+MATLAB er mer enn en avansert kalkulator, det er et fleksibelt, programmerbart matematikkmiljø som kan tilpasses nye oppgaver. <a href="http://mxeoctave.osuv.de/">GNU Octave</a> er en frivare løsning som bruker samme syntaks som MATLAB. De to systemene kan brukes om hverandre til numeriske oppgaver.
+</p>
+<p>
+Du får best utbytte av kurset ved å ha startet opp MATLAB eller Octave og prøve ut kommandoene som blir vist i stedet for bare å lese teksten. Lag dine egne varianter og se hva som skjer. Når mine knappe forklaringer ikke er tilstrekkelige vil du finne utfyllende hjelp bak noen tastetrykk i MATLAB. Jeg har plukket ut noen videoer som demonstrerer bruken av MATLAB, se avsnittene som er merket GJØR DET SELV.
+<br>Siden dette er en nettside kan du bruke søkefunksjonen Ctrl+F, F3 i nettleseren til å finne nøkkelord.
+</p>
+<p>
+<div class="oppgaver">
+GJØR DET SELV 1:
+<ol>
+<li>Skaff deg MATLAB eller Octave og installer programvaren. Test at den starter opp.</li>
+<li>Se videoen <a href="http://se.mathworks.com/videos/working-in-the-development-environment-69021.html">Development environment</a> som introduserer deg til arbeidsvinduene i MATLAB.</li>
+<li>En grei gjennomgang av MATLAB finner du også i videoen <a href="http://se.mathworks.com/videos/getting-started-with-matlab-68985.html">Getting started with MATLAB</a></li>
+<li>Av de enormt mange ressursene på nettet kan du kanskje fortsette med <a href="http://se.mathworks.com/academia/student_center/tutorials/launchpad.html">MATLAB Tutorials and Learning Resources</a></li>
+<li><a href="http://se.mathworks.com/videos/working-in-the-development-environment-69021.html">Installasjon av Octave</a></li>
+<li><a href="https://connect.uninett.no/p80w654oauf/">Octave oppstart og GUI</a></li>
+<li><a href="http://wiki.octave.org/Octave_for_MacOS_X">Octave med Mac</a></li>
+</ol>
+</div>
+<p>
+MATLAB viser i utgangspunktet flere vinduer der vi kan organisere arbeidet. Beregninger og visning av resultater skjer i Command Window. Til venstre vises arbeidsfiler av en filutforsker, Current Folder. Til høyre er det vindu som viser hvilke variabler som er aktive i beregningene, Workspace, og en liste over de kommandoene som er brukt, Command History. Når du har kommet et stykke ut i dette kurset får du mer rede på hva som menes med disse begrepene.
+</p>
+<img src="http://ansatte.hin.no/tg/MatlabGui1.PNG" alt="Matlab GUI" style="width:800px;height:411px">
+<p>
+Jeg foretrekker en enklest mulig arbeidsflate - og lar bare Command Window være synlig. Med noen få enkle kommandoer kan jeg la MATLAB fortelle meg det som de andre arbeidsvinduene inneholder. I dette kurset har jeg klippet ut beregninger fra kommandovinduet til tekstboksene med grå bakgrunn.
+</p>
+<img src="http://ansatte.hin.no/tg/MatlabGui2.PNG" alt="Matlab GUI" style="width:643px;height:254px">
+<p>
+</p>
+<a id="kalkula"></a><div class="subtitle">MATLAB som kalkulator</div>
+<p>
+La oss teste MATLAB på noen regnestykker,</p>
+<p>
+$1 + 2 \cdot 3 - \frac 4 5 = $ ,  &nbsp;&nbsp;&nbsp;&nbsp;$100^2 - 3^2 = $ ,  &nbsp;&nbsp;&nbsp;&nbsp;$\frac 1 {\frac 2 3} - \frac{\frac 4 5} 6 = $<br>
+$ \displaystyle {1 + \frac {2 - \frac 3 4} {5 + \frac 6 7}} = $ ,  &nbsp;&nbsp;&nbsp;&nbsp;$8000000000 \times 2.5 \cdot 10^{-12} = $
+ , &nbsp;&nbsp;&nbsp;&nbsp; $2^3 \cdot \sqrt 9 = $
+</p>
+<p>
+Kommandoer tastes inn etter promptet >> og svaret vises på neste linje bak <code>ans =</code><br>
+Kommentarer starter med et prosenttegn, eller %{ og %} over flere linjer.
+</p>
+<pre class="matlab-code">
+>> 1+2*3-4/5                                <span class="kom">% Gangetegn er * og divisjonstegn er /</span>
+ans =
+     6.2000
+>> 100^2-3^2                                <span class="kom">% Eksponentoperator er ^</span>
+ans =
+     9991
+>> 1/(2/3)-(4/5)/6
+ans =  
+     1.3667
+>> 1+(2-3/4)/(5+6/7)
+ans =
+     1.2134
+>> 8e9 * 2.5e-12                            <span class="kom">% Her brukes eksponentiell notasjon</span>
+ans =
+     0.0200
+>> 2^3*sqrt(9)                              <span class="kom">% Kvadratrot beregnes med funksjonen sqrt</span>
+ans =
+     24   
+</pre>
+<p>
+Vi prøver noen flere beregninger,</p><p>
+$\sin \frac {\pi} {6} = $ , &nbsp;&nbsp;&nbsp;&nbsp; $\ln \sqrt 2 = $ , &nbsp;&nbsp;&nbsp;&nbsp; $e^{-2} = $
+
+</p>
+<pre class="matlab-code">
+>> sin(pi/6)                                <span class="kom">% pi er en konstant, sinusverdi beregnes i en funksjon</span>
+ans =
+    0.5000
+>> log(sqrt(2))                             <span class="kom">% funksjonen log beregner naturlig logaritme</span>
+ans =
+     0.3466
+>> exp(-2)                                  <span class="kom">% 'e-opphøyd-i' beregnes med funksjonen exp</span>
+ans =
+     0.1353 
+</pre>
+<p>
+Som du ser blir alle beregninger tastet inn på enlinje form, og det brukes funksjoner der vi er vant til rottegn og andre skrivemåter.
+</p>
+<div class="oppgaver">
+GJØR DET SELV 2:
+<ol>
+<li>Beregn&nbsp;&nbsp; $\displaystyle{ \frac {2^3 - \sqrt 3} {0.3 - \frac 1 3}} = $</li>
+<li>Beregn&nbsp;&nbsp; $\displaystyle{\frac {1+\frac 1 3} {2 (\frac 3 5 - \frac 5 3)}} = $</li>
+<li>Beregn&nbsp;&nbsp; $\displaystyle{\frac {\sqrt 3 \cdot \sqrt 8} {2 \sqrt 6}} =$</li>
+<li>Beregn&nbsp;&nbsp; $\displaystyle{(2+\frac 1 2)(2 - \frac 1 2)(\frac 2 3 - \frac 2 5)} = $</li>
+<li>Beregn&nbsp;&nbsp; $\displaystyle{12 – (12 – 3)e^{\frac {-0.03} {0.55}}} = $</li>
+</ol>
+</div>
+
+<a href="javascript:hideshow(document.getElementById('adiv2'))">Vis/gjem svar</a><br>
+<div id="adiv2" style="display: none">1: -188.0385, 2: -0.6250, 3: 1.0000, 4: 1.0000, 5: 3.4778</div>
+
+<p></p>
+<a id="operato"></a><div class="subtitle">Operatorer, regnerekkefølge</div>
+<p>
+Evaluering skjer fra venstre mot høyre, men presedens overstyrer, operasjoner på høyere nivå utføres før operasjoner på lavere nivå. Uttrykk i parenteser beregnes først. Skalaroperasjonene med punktum foran operatoren bli forklart senere.
+</p>
+<pre class="blank">
+    1.   ( )            Parenteser
+    2.   ^  .^          Eksponenter
+    3.   -              Negering, 'minus'
+    4.   * /\  .* ./    Multiplikasjon og divisjon (høyre og venstre)
+    5.   + -            Addisjon og subtraksjon
+</pre>   
+<pre class="matlab-code">
+>> 7 + 6 / 3 / - 2                          <span class="kom">% Beregnes slik: = 7 + 2 / - 2</span>
+ans =                                       <span class="kom">%                = 7 - 1</span>
+     6
+
+>> 2 + 3 * 4 - 8 / 2 ^ - 1                  <span class="kom">% Beregnes slik: = 2 + 12 - 8 / 2 ^ - 1</span>
+ans =                                       <span class="kom">%                = 14 - 8 / (1/2)</span>
+    -2                                      <span class="kom">%                = 14 - 16 = -2</span>
+
+>> 2 + 3 * ( 4 - 8 / 2 ) ^ - 1              <span class="kom">% Beregnes slik: = 2 + 3 * (4 - 4) ^ - 1</span>
+ans =                                       <span class="kom">%                = 2 + 3 * 0 ^ - 1</span>
+    Inf                                     <span class="kom">%                = 2 + 3 * Inf = Inf</span>
+</pre>
+<p>
+Beregninger av typen 1/0 gir en advarsel, og svaret settes til <code>Inf</code> (infinity). Blir svaret ubestemt, som i 0/0, blir det satt til <code>NaN</code> (not a number).
+</p>
+<div class="oppgaver">
+GJØR DET SELV 3:
+<ol>
+<li>Finn svaret ved hoderegning før du tester: 1+1-1*2/3*3 =</li>
+<li>Finn svaret ved hoderegning før du tester: 2^3/4 =</li>
+<li>Finn svaret ved hoderegning før du tester: 2^-3*2^3 =</li>
+<li>Finn svaret ved hoderegning før du tester: 1+(2-2*(4-8/4))/2 =</li>
+<li>Finn svaret ved hoderegning før du tester: 2*-2/-2^-2 =</li>
+<li>Hvilken kommando gir 1 som resultat?<br>
+&nbsp;&nbsp;&nbsp;&nbsp;a) 1+4/5&nbsp;&nbsp; b) 6/2*3&nbsp;&nbsp; c) 3^2/3*3&nbsp;&nbsp; d) 1-2+3/3-2+1&nbsp;&nbsp; e) 3/3/3^-1-2</li>
+</ol>
+</div>
+
+<a href="javascript:hideshow(document.getElementById('adiv3'))">Vis/gjem svar</a><br>
+<div id="adiv3" style="display: none">
+1: <code>1+1-1*2/3*3 = <u>2</u>-1*2/3*3 = 2-<u>2</u>/3*3 = 2-<u>0.666666..</u>*3 = 2-<u>2</u> = 0</code><br>
+6: <code>3/3/3^-1-2 = <u>1</u>/3^-1-2 = 1/(<u>1/3</u>)-2 = <u>3</u>-2 = 1</code></div>
+
+
+<p></p>
+<a id="funksjo"></a><div class="subtitle">Noen funksjoner</div>
+<p>
+Du kan bruke alle matematiske basisfunksjoner og en mengde andre fra ulike fagområder.
+</p>
+<pre class="blank">
+    sin(x)       cos(x)        tan(x)            Vinkler i radianer
+    asin(x)      acos(x)       atan(x)           sind(), acosd(), .. for vinkler i grader        
+    exp(x)       sqrt(x)       log(x)
+    log10(x)     abs(x)        inv(x)
+    factor(x)    gcd(x, y)     factorial(x)
+    randi(n)     floor(x)      round(x)
+    help         clc           clear             (systemfunksjoner)
+</pre>   
+<p>
+Kommandoen<code> help sin </code>gir hjelpetekst til sinusfunksjonen. Slå opp hjelp for de andre funksjonene også!<br>
+Her beregnes $\sqrt{3^2 + 4^2}$ , &nbsp;&nbsp;&nbsp;$e^{\ln 3}$ , &nbsp;&nbsp;&nbsp;$\log 10 - \log \frac 1 {10}$ , &nbsp;&nbsp;&nbsp;$\sin \frac \pi 2$ , &nbsp;&nbsp;&nbsp;$\sin^{-1} 1$ , &nbsp;&nbsp;&nbsp;$\sin(\sin^{-1} 1)$<br>
+og funksjoner som faktoriserer, finner største felles divisor, beregner fakultet og lager tilfeldige tall:
+</p>
+<pre class="matlab-code">
+>> sqrt(3^2 + 4^2) 
+ans =
+     5
+>> exp(log(3)), log10(10)-log10(1/10)       <span class="kom">% To kommandoer på samme linje, skilt med komma</span>
+ans =
+     3.0000
+ans =
+     2
+>> sin(pi/2), asin(1), sin(asin(1))         
+ans =  1
+ans =  1.5708                               <span class="kom">% Vinkelen pi/2 = 1.5708</span>
+ans =  1
+>> factor(15), factor(50), gcd(15,50)
+ans =                                       <span class="kom">% Faktoriserer 15</span>
+     3   5
+ans =                                       <span class="kom">% Faktoriserer 50</span>
+     2   5   5
+ans =  
+     5                                      <span class="kom">% Største felles divisor</span>
+
+>> factorial(10)                            <span class="kom">% Fakultet av 10 = 1*2*3*...*10</span>
+ans =
+     3628800
+>> randi(6), randi(6), randi(6)             <span class="kom">% Tilfeldige tall i området 1..6</span>
+ans =  3
+ans =  6
+ans =  1
+</pre>
+<div class="oppgaver">
+GJØR DET SELV 4:
+<ol>
+<li>Finn ut om brøken $\displaystyle {\frac {96} {105}}$ kan forkortes ved hjelp av en av funksjonene som er listet opp ovenfor.</li>
+<li>Hvilken funksjon bruker MATLAB til å beregne naturlig logaritme?</li>
+<li>Det finnes en funksjon som beregner n-te rot av et tall. Hva er MATLABs funksjonsnavn?</li>
+<li>En rettvinklet trekant har sidelengder 3, 4 og 5.<br>
+Bruk definisjonen av tangensverdi til en vinkel og beregn alle vinklene (i grader) i trekanten.
+</li>
+<li>MATLAB har en funksjon som beregner hypotenusen i en rettvinklet trekant når vi kjenner katetene.<br>
+Hvilken funksjon er det? Prøv den!
+</li>
+<li>I vinkelområdet 0<sup>o</sup> - 360<sup>o</sup> er det 2 vinkler som har cosinusverdi = 0.3.<br>Finn begge vinklene, både i grader og radianer.<br>
+Test om vinklene gir cosinusverdi = 0.3.
+</li>
+</ol>
+</div>
+
+<a href="javascript:hideshow(document.getElementById('adiv4'))">Vis/gjem svar</a><br>
+<div id="adiv4" style="display: none">
+1: Hva med gcd eller factor?<br>
+6: cos(v) = cos(2*pi-v)<br>
+</div>
+
+<p></p>
+<a id="variabl"></a><div class="subtitle">Variabler, tilordning</div>
+<p>
+En variabel er en navngitt lagerplass for en dataverdi. Med likhetstegnet gir vi verdi til
+variabelen, enten som tall eller som resultat av en beregning der også funksjoner og variabler kan være
+innblandet. Kommandoen som gir verdi til en variabel kalles en tilordning, og brukes slik: <code>&lt;variabelnavn&gt; = &lt;verdi&gt;</code>
+</p>
+<pre class="matlab-code">
+>> lengde = 3; bredde = 4;                  <span class="kom">% To kommandoer som tilordner verdier til variabler.</span>
+>> areal = lengde * bredde                  <span class="kom">% Variabelen areal tilordnes resultatet av</span>
+areal =                                     <span class="kom">% beregning med variabler.</span>
+     12
+>> A = 2; B = 2; C = -4;                    <span class="kom">% Konstantene i likningen  A*x^2 + B*x + C = 0</span>
+>> x1 = (-B + sqrt(B^2 - 4*A*C))/2/A        <span class="kom">% Finner en av røttene i likningen med ABC-formelen</span>
+x1 = 
+     1
+x2 = (-B - sqrt(B^2 - 4*A*C))/2/A           <span class="kom">% den andre rota</span>
+x2 = 
+    -2
+>> radius = 2.34;
+>> kulevolum = 4/3*pi*radius^3
+kulevolum =
+     53.671
+>> sum = 7; sum = sum + 4                   <span class="kom">% Neste verdi for sum beregnes av forrige verdi</span>
+sum = 
+     11  
+</pre>
+<p>
+Noen matematiske konstanter er forhåndsdefinert som variabler,<br>
+<code>i = j = imaginær enhet,   pi = 'pi',   exp(1) = 'e' (grunntall naturlig logaritme),   ans = siste beregnede verdi</code><br>
+Likhetstegnet brukes som tilordningsoperator, variabelen som er nevnt på venstre side får verdiinnhold lik verdien til uttrykket på høyre side. Den siste linja vil en matematiker kanskje stusse på, men betyr altså at variabelen <code>sum</code> får en ny verdi lik forrige verdi av sum lagt sammen med 4. Variabelnavn i MATLAB må starte med en bokstav og ellers være en sammenhengende kombinasjon av bokstaver og sifre. Store og små bokstaver regnes som forskjellige tegn, særnorske bokstaver passer dessverre ikke inn. Bruk helst variabelnavn som forteller om hva de står for, underscore kan brukes til å dele_opp_ord. Verdiinnholdet i en variabel vises når vi taster variabelnavnet alene som kommando,
+</p>
+<pre class="matlab-code">
+>> vekt = 75; hoyde = 1.80; bmi = vekt/hoyde^2;
+>> bmi
+bmi = 
+     23.148 
+</pre>
+<p>
+Variabler er et av basiselementene i programmering med MATLAB. Skal vi beregne bmi for et annet sett av vekt og høyde kan vi hente fram kommandoen som setter disse verdiene (pil-opp eller klikk på history), redigere inn nye verdier og gjøre beregningen en gang til,
+</p>
+<pre class="matlab-code">
+>> vekt = 85; hoyde = 1.82; bmi = vekt/hoyde^2
+bmi =  
+     25.661
+</pre>
+<p>
+I omfattende beregningsøkter kan det fort bli en del variabler å holde styr på. Har du vinduet Workspace åpent ser du både navn og datatyper der. Hvis ikke kan du gi kommandoen <code>who</code> eller <code>whos</code>. Verdiene til variablene finner du ved å gi variabelnavnet som kommando.
+</p>
+<pre class="matlab-code">
+>> who
+Your variables are:
+    ans        bredde     lengde     sum        
+    areal      kulevolum  radius
+</pre>
+<div class="oppgaver">
+GJØR DET SELV 5:
+<ol>
+<li>Hvilke variabelnavn er tillatt av de følgende?<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>a) 2talt   &nbsp;&nbsp;b) dill-dall   &nbsp;&nbsp;c) Oppg.2   &nbsp;&nbsp;d) _tja   &nbsp;&nbsp;e) pie</code></li>
+<li>Hvilke verdier inneholder variablene a, b og c etter at disse kommandoene er utført?<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a = 1; &nbsp;&nbsp;b = 2; &nbsp;&nbsp;c = a; &nbsp;&nbsp;a = b, &nbsp;&nbsp;b = c</code></li>
+<li>Grunntallet 'e' for naturlig logaritme kan tilnærmes med verdien av $(1 + \frac 1 n)^n$ for store verdier av n.<br>
+Hva er minste verdi av n for at avviket mellom tilnærmet verdi og 'eksakt' verdi for 'e' skal være &lt;0.001? Prøv deg fram!</li>
+<li>Sett inn verdiene  x = 2.3 ,  y = -3.4  og  z = 4.5  i regnestykkene nedenfor og beregn verdiene:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$3 x^3 - 4 x^2 + 5 x - 6 =$<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$\ln |{x^3 - y^2}| =$<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$e^{\frac {x+y} z}=$</li>
+<li>En kube har sidelengder 8 cm.<br>Bruk MATLAB til å beregne radius i en kule som har like stort volum som kuben.</li>
+<li>En trekant har sidelengder 6 cm, 8 cm og 10 cm.<br>Bruk cosinussetningen $c^2 = a^2 + b^2 -2 a b \cos v_{ab}$ tre ganger til å finne vinklene i trekanten. Sjekk at summen av vinklene er 180<sup>o</sup></li>
+<li>Arealet av en trekant kan beregnes av Herons formel hvis vi kjenner sidelengdene a, b og c:<br>
+$Areal = \displaystyle{\sqrt{\frac s 2 (\frac s 2 - a)(\frac s 2 - b)(\frac s 2 - c)}}$ &nbsp;&nbsp;der &nbsp;&nbsp;$\displaystyle {s = a + b + c}$<br>
+En berømt rettvinklet trekant har sidelengder 3, 4 og 5. Bruk denne til å teste arealet med Herons formel og MATLAB.
+</li>
+</ol>
+</div>
+
+<a href="javascript:hideshow(document.getElementById('adiv5'))">Vis/gjem svar</a><br>
+<div id="adiv5" style="display: none">
+1: Prøv å lage tilordninger: 2talt=7 osv. og se hva som skjer.<br>
+3: I stedet for å taste inn forskjellige verdier for n, for eksempel <code>&gt;&gt; (1+1/777)^777</code> er det lurt å bruke en variabel som endres: <code>&gt;&gt; n = 777; (1+1/n)^n)</code><br>
+5: $kubevolum = side^3$, $kulevolum = \frac 4 3 \pi \cdot radius^3$<br>
+6: Fikler du litt med formelen får du at $\cos v_{ab} = \frac {a^2 + b^2 - c^2}{2 a b}$
+</div>
+
+<p></p>
+<a id="tallfor"></a><div class="subtitle">Tallformat</div>
+<p>
+MATLAB buker IEEE754 standard for å lagre verdiene av tall. Det gir tallområdet ±2.23..×10<sup>−308</sup> til ±1.80..×10<sup>308</sup> der antall siffer foran 10<sup>±308</sup> er 16. Denne talltypen kalles double precision. Normalt vises ikke alle siffer i et tallsvar, men internt i beregningene brukes største nøyaktighet. Med kommandoen  format kan vi styre hvor mange siffer som skal vises, format short er det normale, format long viser alle siffer foran tierpotensdelen. Tall kan tastes inn og vises på normalform eller E-form som produktet av et desimaltall og en tierpotens.
+</p>
+<pre class="matlab-code">
+>> format long, pi                          <span class="kom">% 16 gjeldende siffer av 'pi' vises</span>
+ans =
+     3.141592653589793
+>> format short, pi                         <span class="kom">% 4 gjeldende siffer av 'pi' vises</span>
+ans =
+      3.1416
+>> format rat, pi                           <span class="kom">% Lager heltallsbrøk tilnærming, rational</span>
+ans =
+     355/113     
+>> format compact, format short, pi         <span class="kom">% Normal visning, ingen ekstra tomme linjer</span>
+ans =
+     3.1416
+>> format loose, pi                         <span class="kom">% Setter inn tomme linjer</span>
+
+ans =
+
+     3.1416
+>> format short e, 1/pi                     <span class="kom">% Standardform, e-form</span>
+ans =
+     3.1831e-01
+</pre>
+<p>
+Lager vi regnestykker med heltall eller heltallsbrøker vil MATLAB beregne med sin interne tallrepresentasjon, og alle svar blir vist med et antall tellende siffer. Setter vi opp format rat vil MATLAB først regne på sin vanlige måte - og så lage en heltalls tilnærming til teller og nevner, slik det ble vist med 'pi' som eksempel.
+</p>
+<div class="oppgaver">
+GJØR DET SELV 6:
+<ol>
+<li>Sett <code> format rat</code> og beregn &nbsp;&nbsp;&nbsp;&nbsp;a) $\frac 2 3 + \frac 3 4$ , &nbsp;&nbsp;&nbsp;&nbsp; b) $\sqrt 2$ &nbsp;&nbsp;&nbsp;&nbsp; c) $\displaystyle{\frac{1 - (2 - \frac 3 5) - 3^2} {\frac 2 3 - \frac 5 {\frac 6 7}}}$</li>
+<li>Kan du forklare hvorfor MATLAB mener at &nbsp;&nbsp;pi = 355/113 &nbsp;&nbsp;i format rat?</li>
+</ol>
+</div>
+
+<a href="javascript:hideshow(document.getElementById('adiv6'))">Vis/gjem svar</a><br>
+<div id="adiv6" style="display: none">
+2: MATLAB regner bestandig med flyttall, men med format rat blir tall tilnærmet med heltallsbrøker. Funksjonen rats viser samme brøktilnærming uten å sette formatet til rat. Det kan brukes til forkortinger, rats(96/105) = 32/35 .
+</div>
+
+<p></p>
+<a id="komplek"></a><div class="subtitle">Komplekse tall</div>
+<p>
+Komplekse tall regnes ikke som egen datatype, de hører naturlig inn under flyttall. Vi kan ikke slå av eller på matematikk med komplekse tall slik som for en kalkulator. MATLAB har reservert konstantene  i og  j som imaginær enhet $ i = j = \sqrt {-1}$ . Her er det laget litt matematikk med komplekse tall:
+</p>
+<pre class="matlab-code">
+>> w = 3 + 4*i; z = -2 + i*2;               <span class="kom">% To komplekse tall på komponentform</span>
+>> w - z                                    
+ans =
+     5.0000 + 2.0000i
+>> w * z
+ans =
+   -14.0000 - 2.0000i
+>> A = 1; B = 2; C = 3;                     <span class="kom">% Røttene i likningen x^2 + 2x + 3 = 0</span>
+>> x1 = (-B + sqrt(B^2 - 4*A*C))/2/A        <span class="kom">% beregnes ved innsetting i ABC-formelen.</span>
+x1 =                                        <span class="kom">% Det blir ikke reelle tall som løsning,</span>
+   -1.0000 + 1.4142i                        <span class="kom">% men to (konjugerte) komplekse tall.</span>
+>> x2 = (-B - sqrt(B^2 - 4*A*C))/2/A
+x2 =
+   -1.0000 - 1.4142i
+</pre>
+<p>
+I dette microMATLAB kurset skal vi ikke lage matematikk med komplekse tall. Likevel er det lurt å vite om dette fordi beregningene vi gjør noen ganger vil overraske oss med komplekse løsninger, som ovenfor.
+</p>
+<div class="oppgaver">
+GJØR DET SELV 7:<br>
+<ol>
+<li>Finn ut om likningen $x^4 -16 = 0$ har de 4 løsningene x<sub>1</sub>=2, x<sub>2</sub>=-2, x<sub>3</sub>=2i, x<sub>4</sub>=-2i.</li>
+</ol>
+</div>
+<a href="javascript:hideshow(document.getElementById('adiv7'))">Vis/gjem svar</a><br>
+<div id="adiv7" style="display: none">
+1: Prøv <code> &gt;&gt; roots([1 0 0 0 -16])</code>.<br>
+Du kan også teste løsningene, for eksempel <code> &gt;&gt; (-2*i)^4</code>.
+</div>
+<p>
+</p>
+<a id="matrise"></a><div class="subtitle">Matriser, vektorer og skalarer</div>
+<p>
+MATLAB er spesialist på matriser. En matrise er rett og slett en ordnet stabel med tall eller andre datatyper. I faget matematikk er matriser byggesteinene i emnet lineær algebra med teoremer og teknikker for å lage sum, produkt og andre operasjoner med matriser. Det er ikke nødvendig å vite detaljer om dette for å komme i gang med MATLAB, men noen enkle begreper er
+det greit å kjenne til.
+</p>
+<p>
+Her er eksempel på en matrise, en radvektor, en kolonnevektor og en skalar:<br>
+<pre class="blank">
+  A <span class="gul"> 2   -3</span>     B <span class="gul"> 2  -3   7   4</span>     C <span class="gul"> 3</span>      D <span class="gul"> 5</span>
+    <span class="gul">-4    5</span>                            <span class="gul">-5</span>
+    <span class="gul"> 6   -7</span>                            <span class="gul"> 2</span>
+</pre>
+<p>
+Elementene i en matrise er ordnet i rader og kolonner. Matrise A har 3 rader og 2 kolonner, det er en 3x2 matrise. Matrise B er en 1x4 matrise - og kalles en radvektor. Matrise C en en kolonnevektor med 3 rader. Matrise D er en 1x1 matrise, og kalles en skalar - eller rett og slett et tall. Slik setter vi opp disse matrisene i MATLAB:
+</p>
+<pre class="matlab-code">
+>> A = [2 -3; -4 5; 6 -7]                   <span class="kom">% Matriser rammes inn av klammeparenteser.</span>
+A =                                         <span class="kom">% Elementene i en rad skilles med mellomrom (eller krøllkomma).</span>
+     2    -3                                <span class="kom">% Radene skilles med semikolon.</span>
+    -4     5
+     6    -7
+>> B = [2 -3 7 4]                           <span class="kom">% En radvektor</span>
+B =
+     2    -3     7     4
+>> C = [3; -5; 2]                           <span class="kom">% En kolonnevektor</span>
+C =
+     3
+    -5
+     2
+>> D = 5                                    <span class="kom">% En skalar, et tall</span>
+D =
+     5
+</pre>
+<p> De enkelte elementene i en matrise er tilgjengelig ved indeksering, et tallpar som peker ut rad og kolonne:
+</p>
+<pre class="matlab-code">
+>> A(3, 2)                                  <span class="kom">% Gir verdien av elementet i A på rad 3, kolonne 2.</span>
+ans =
+    -7
+>> B(3) = 77                                <span class="kom">% Setter verdien i tredje element i B til 77.</span>
+B =
+     2    -3    77     4
+>> C(2) = - C(2)                            <span class="kom">% Bytter fortegn på det tredje elementet i C.</span>
+C =
+     3
+     5
+     2 
+</pre>
+<p>
+I dette kurset skal vi ikke sjonglere med matriser - bortsett fra kolonnevektorer. Matriser er samlinger av tall, to matriser kan adderes, multipliseres og behandles med andre operasjoner - etter definerte regler. <i>Regneoperatorene for multiplikasjon og divisjon med matriser er <span class="gul">*</span> og <span class="gul">/</span>, til forveksling lik de samme operatorene som vi bruker for tall.</i><br>
+Det som blir aktuelt for oss er å gjøre skalare operasjoner, det vil si å endre hvert element i en matrise eller vektor med samme tall. Altså må det skilles mellom skalar multiplikasjon med matriser og normal multiplikasjon. Skalaroperatorene har et punktum foran selve operatortegnene, <span class="gul">.^&nbsp;&nbsp;.*&nbsp;&nbsp;./</span> .
+</p>
+<pre class="matlab-code">
+>> A = [2 -3; 0 7]; B = [1 -2; -3 4];       <span class="kom">% To 2x2 matriser</span>
+>> A*B                                      <span class="kom">% Matrisemultiplikasjon, som</span>
+ans =                                       <span class="kom">% følger regler for dette</span>
+    11   -16
+   -21    28
+>> A.*B                                     <span class="kom">% Skalarmultiplikasjon,</span>
+ans =                                       <span class="kom">% elementer i samme posisjon multipliseres</span>
+     2     6
+     0    28
+>> 3*[1 2 3 4]                              <span class="kom">% Skalar multiplikasjon</span>
+ans =
+     3     6     9    12
+</pre>
+<p>
+Radvektorer er nyttige når vi skal gjøre samme beregning for en rekke tallverdier. Den enkleste måten å lage grafer er å sette opp en rekke uavhengige variabler (tall langs x-aksen) - og så beregne tilsvarende funksjonsverdier for hver enkelt x-verdi. Dette kan vi gjøre i en eneste skalar operasjon.<br>
+Med kolontegnet som operator kan vi sette opp en radvektor som spenner over et område:
+</p>
+<pre class="matlab-code">
+>> x = 1:8                                  <span class="kom">% Lager radvektoren [1 2 3 4 5 6 7 8]</span>
+x =
+     1     2     3     4     5     6     7     8     9    10
+>> x.^2                                     <span class="kom">% Hvert element i x opphøyes i 2. potens</span>
+ans =
+     1     4     9    16    25    36    49    64    81   100
+</pre>
+<p>
+En slik områdevektor kan entens dannes som <code>&lt;fra&gt;:&lt;til&gt;</code> eller <code>&lt;fra&gt;:&lt;steglengde&gt;:&lt;til&gt;</code>,
+</p>
+<pre class="matlab-code">
+>> x_verdier = -pi : 0.05 : pi              <span class="kom">% Lager 126 verdier fra ca. -3.14 til +3.14</span>
+x_verdier =
+    -3.1416   -3.0916    ...   ...   3.0584    3.1084     
+>> sin(x_verdier)                           <span class="kom">% Her beregnes 126 sinusverdier</span>
+ans =
+    -0.0000   -0.0500  	...   ...   0.0831    0.0332
+</pre>
+<div class="oppgaver">
+GJØR DET SELV 8:
+<ol>
+<li>Bruk operatoren kolon og lag radvektorene:<br>
+&nbsp;&nbsp;&nbsp;	2&nbsp;&nbsp; 	3&nbsp;&nbsp; 	4&nbsp;&nbsp; 	5&nbsp;&nbsp; 	6&nbsp;&nbsp; 	7<br>
+&nbsp;&nbsp;&nbsp;	1.1000&nbsp;&nbsp; 	1.3000&nbsp;&nbsp; 	1.5000&nbsp;	1.7000<br>
+&nbsp;&nbsp;&nbsp;	8&nbsp;&nbsp; 	6&nbsp;&nbsp; 	4&nbsp;&nbsp; 	2</li>
+<li>Hvor mange tall er det i radvektoren&nbsp;&nbsp; <code>3:4:55</code> ?
+<li>Lag en tabell over $\log_{10}(x)$ for x = 1, 3, 10, 30, 100, 300, 1000, 3000.</li>
+<li>Lag en tabell over $\log_{10}(\frac 1 x)$ for x = 1, 3, 10, 30, 100, 300, 1000, 3000.</li>
+<li>Finn ut hvordan funksjonen  linspace  virker, og bruk den til å lage en radvektor med innhold som fra kommandoen
+&nbsp;&nbsp;&nbsp;  <code>>> 3:4:55</code> .</li>
+<li>Her er en liten nøtt for de som kjenner til matriseregning:<br>
+Lag matrisene&nbsp;&nbsp; <code>A=[1 2; 3 4]; B=[5 6; 7 8];</code>&nbsp;&nbsp; og gi kommandoen&nbsp;&nbsp; <code>A*B, A.*B, B/A, B./A</code>&nbsp;&nbsp;<br>
+Kan du forklare resultatene?
+</li>
+</ol>
+</div>
+
+<a href="javascript:hideshow(document.getElementById('adiv8'))">Vis/gjem svar</a><br>
+<div id="adiv8" style="display: none">
+1: Syntaks er &lt;fra&gt;:&lt;til&gt; eller &lt;fra&gt;:&lt;steglengde&gt;:&lt;til&gt;<br>
+2: Antall <i>steg</i> er (55-3)/4=13, men antall <i>tall</i> er 13+1 fordi vi begynner med et og slutter med et.<br>
+3: x-vektor kan ikke lages av områdeoperator alene, det enkleste er å taste inn manuelt,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;>> [1, 3, 10, ...]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;>> log_vektor3 = log10(x)<br>
+4: >> log_vektor4 = log10(1./x)<br>
+5: Brukes slik: linspace(&lt;fra&gt;, &lt;til&gt;, &lt;antall&gt;). Hvis det ikke oppgis &lt;antall&gt; får vi 100 verdier - og det kan passe greit til plotting.
+</div>
+
+<p></p>
+<a id="plottin"></a><div class="subtitle">Plotting</div>
+<p>
+Plotting av grafen til en funksjon gjøres etter følgende oppskrift:
+</p>
+<ol>
+<li>Lag en radvektor med x-verdier for aktuelt definisjonsområde.</li>
+<li>Beregn y-verdier ut fra funksjonsdefinisjonen for hver x-verdi.</li>
+<li>Gi kommandoen plot(x-verdier, y-verdier)</li>
+<li>Sett inn rutenett, navn på akser, eller andre tilpasninger</li>
+</ol>
+<p>
+Her plottes sinusfunksjonen med vinkelverdier fra $- 2 \pi$ til $+ 2 \pi$:
+</p>
+<pre class="matlab-code">
+>> x_verdier = -2*pi : 0.05 : 2*pi;         <span class="kom">% Lager 252 verdier fra ca. -6.28 til +6.28</span>
+>> y_verdier = sin(x_verdier);              <span class="kom">% Her beregnes 252 sinusverdier</span>
+>> plot(x_verdier, y_verdier), grid on      <span class="kom">% GJØR DET SELV!</span>
+</pre>
+<p>
+Grafen tegnes som streker mellom de koordinatene (x, y) som gis til funksjonen plot. Her må vi på skjønn velge et antall x-verdier som gir 'glatt' kurve. Når vi beregner y-verdier blir dette en skalar vektormatematikk med operatorene .^, .* og ./ . 
+<br>
+Flere plot kan gjøres i samme vindu etter at du har gitt kommandoen <code>hold on</code>. Vil du fortsette med et nytt plot-vindu kommanderer du <code>hold off</code>.
+</p>
+<div class="oppgaver">
+GJØR DET SELV 9:
+<ol>
+<li>Lag plot av funksjonen $f(x) = x^2 + 2 x - 3$ fra $x = -4$ til $x = 2$ .</li>
+<li>Lag plot av funksjonene $g(x) = \ln x$ og $h(x)  =\frac 1 x$ for &nbsp;$0 &lt; x &lt; 5$&nbsp; i samme plotvindu.</li>
+<li>Slå opp hjelp om funksjonen <code>bar</code>.<br>Lag et stolpediagram over verdiene {1, 1/2, 1/3, 1/4, 1/5, 1/6, ..., 1/33}</li>
+<li>Finn ut hva som skjer om du plotter to grafer med ulike x-områder i samme vindu, for eksempel $f(x)=e^x$ for -2&lt;x&lt;2 og $g(x)=x^3$ for -4&lt;x&lt;4 .
+</li>
+<li>Funksjonen &nbsp;&nbsp;$f(x) = e^{-x} \cdot \sqrt x$ &nbsp;&nbsp;har et maksimumspunkt. Lag grafen til funksjonen med et passe valg av x-verdier slik at du kan lese av omtrentlig verdi for koordinatene til maksimumspunktet.
+</li>
+</ol>
+</div>
+
+<a href="javascript:hideshow(document.getElementById('adiv9'))">Vis/gjem svar</a><br>
+<div id="adiv9" style="display: none">
+1, 2: Hvis du vil lage plot med for eksempel 100 x-verdier må du enten anslå/beregne hvor stor steglengden skal være, eller bruke funksjonen <code>linspace(&lt;fra&gt;, &lt;til&gt;, &lt;antall&gt;)</code> .<br>
+3: n = 1:33; bar(n, 1./n)<br>
+5: Funksjonen eksisterer for x>=0, og vi kan eksperimentere med x-område for å finne en maksverdi, for eksempel&nbsp;&nbsp;>> x=0:0.1:1; f=exp(-x).*sqrt(x)
+</div>
+
+<p></p>
+<a id="vektore"></a><div class="subtitle">Vektorer i fysikk og matematikk</div>
+<p>
+I fysikk og matematikk er vektorer størrelser som representerer lengde og retning – og som kan beskrives geometrisk med komponentverdier parallell med aksene i 2D eller 3D aksesystemer. I MATLAB er egentlig vektorer det samme som endimensjonale matriser, men om vi avgrenser oss til 2 eller 3 elementer kan vi sjonglere med vektorer i planet eller i rommet.
+</p>
+<pre class="matlab-code">
+>> f = [3 4]; g = [-2 2];                   <span class="kom">% To vektorer i 2D, planet</span>
+>> sum = f + g
+sum =
+     1    6
+>> f – 3*g                                  <span class="kom">% differanse og multiplikasjon med skalar</span>
+ans =
+     9   -2
+>> norm(f)                                  <span class="kom">% norm = lengde av vektor</span>
+ans = 
+     5
+</pre>
+<p>
+<i>Skalarproduktet</i> (prikkproduktet) med to vektorer $\vec a =[x_a , y_a ]$ og
+$\vec b = [x_b , y_b]$ er definert som
+$\vec a \cdot \vec b = x_a \cdot x_b + y_a \cdot y_b = |\vec a| \cdot |\vec b| \cdot \cos v_{ab}$ - der $v_{ab}$ er vinkelen mellom $\vec a$ og $\vec b$. MATLAB beregner skalarproduktet med funksjonen <code>dot</code>.
+</p>
+<pre class="matlab-code">
+>> f = [3 4]; g = [-2 2];                   <span class="kom">% To vektorer i 2D, planet</span>
+>> s_produkt = dot(f, g)                    <span class="kom">% skalarproduktet</span>
+s_produkt = 
+     2
+<span class="kom">% Av uttrykket for skalarproduktet kan vinkelen mellom to vektorer finnes:</span>
+>> vinkel = acos(dot(f, g)/norm(f)/norm(g))
+vinkel = 
+     1.4289                                 <span class="kom">% Vinkel i radianer</span>
+</pre>
+<p>
+<i>Kryssproduktet</i> (vektorproduktet)$\vec a \times \vec b$ med $\vec a$ og $\vec b$ er en ny <i>vektor</i> slik at 1) vektoren $\vec a \times \vec b$ står vinkelrett på både $\vec a$ og $\vec b$ , 2) vektorene $\vec a$ , $\vec b$  og $\vec a \times \vec b$ danner et høyrehåndssystem, og 3) $|\vec a \times \vec b| = |\vec a| \cdot |\vec b| \cdot \sin v_{ab}$.<br>
+Absoluttverdien av kryssproduktet er arealet av parallellogrammet som $\vec a$ og $\vec b$ danner. MATLAB beregner vektorproduktet med funksjonen <code>cross</code>.
+</p>
+<p>
+Trevektorproduktet $(\vec a \times \vec b) \cdot \vec c$ er et tall (skalar) som er lik determinantverdien av matrisa som
+komponentene danner,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$(\vec a \times \vec b) \cdot \vec c = \left| \begin{array}{ccc}
+x_a & y_a & z_a \\
+x_b & y_b & z_b \\
+x_c & y_c & z_c \end{array} \right| = x_a \left| \begin{array}{cc}
+y_b & z_b \\
+y_c & z_c \end{array} \right| - y_a \left| \begin{array}{cc}
+x_b & z_b \\
+x_c & z_c \end{array} \right| + z_a \left| \begin{array}{cc}
+x_b & y_b \\
+x_c & y_c \end{array} \right|$<br>
+MATLAB beregner trevektorproduktet ved å kombinere funksjonene <code>cross</code> og <code>dot</code>.
+</p>
+<pre class="matlab-code">
+>> a = [2 -3 4]; b = [1 3 -1]; c = [3 -1 2];
+>> cross(a, b)                              <span class="kom">% kryssproduktet med vektorene a og b</span>
+ans =
+    -9   6   9
+>> tvp = dot(cross(a, b), c)                <span class="kom">% Trevektorproduktet med a, b og c</span>
+tvp =
+    -15
+>> volum = abs(tvp)                         <span class="kom">% Volumet er absoluttverden av trevektorproduktet</span>
+volum = 
+     15
+</pre>
+<div class="oppgaver">
+GJØR DET SELV 10:
+<ol>
+<li>Finn vinkelen mellom $\vec {AB} = [8, -6]$ og $\vec {AD} = [2, 4]$</li>
+<li>Finn arealet at trekanten som utspennes av $\vec {AB} = [8, -6]$ og $\vec {AD} = [2, 4]$</li>
+<li>En trekant ABC har hjørner i punktene A(2, 1), B(5, 4) og C(x, 4). Dessuten vet vi at $|\vec {AC}| = |\vec {BC}|$.<br>
+Beregn sidelengdene i trekanten.</li>
+<li>Et parallellepiped ABCDEFGH er gitt av $\vec {AB}$, $\vec {AD}$ og $\vec {AE}$ og punktene<br>&nbsp;&nbsp;&nbsp;&nbsp;A(1, 1, 1), B(6, 3, 1), D(1, 6, 3) og E(2, 3, 7).<br> Finn volumet.</li>
+</ol>
+</div>
+
+<a href="javascript:hideshow(document.getElementById('adiv10'))">Vis/gjem svar</a><br>
+<div id="adiv10" style="display: none">
+4: I matematikk beskriver vi gjerne punkter innenfor vanlige bueparenteser, men MATLAB skjønner ikke det. Når vi skal beskrive punktene A(1, 1, 1) og  B(6, 3, 1) kan vi bruke radvektorer til også å angi punktenes koordinater,<br>>> pktA = [1 1 1]; pktB = [6 3 1]; . Da kan vi danne vektoren vAB som >> vAB = pktB-pktA;
+</div>
+
+<p></p>
+<a id="polynom"></a><div class="subtitle">Polynomer</div>
+<p>
+Et polynom av n'te grad,  $ a_n x^n + a_{n−1} x_{n–1} + ... + a_1 x + a_0$ , representeres av en vektor som inneholder
+konstantene, [<i>a<sub>n</sub>&nbsp;,&nbsp;a<sub>n-1</sub>&nbsp;, ...&nbsp;,&nbsp;a<sub>1</sub>&nbsp;,&nbsp;a<sub>0</sub></i>] . For eksempel vil <code>p = [1 0 -7 -6]</code> tilsvare
+$x^3 − 7 x - 6$ eller $t^3 − 7 t - 6$ alt etter hvilken variabel vi arbeider med.<br>
+Vi kan finne røtter, lage polynom av røtter, derivere, integrere, evaluere polynom, spalte delbrøker og andre operasjoner. Her er noen polynomfunksjoner:
+</p>
+<pre class="blank">
+    roots(p)        Finner nullpunktene (røttene) til polynomet med konstanter gitt i vektoren p
+    polyder(p)      Finner den deriverte av p. Svaret er en radvektor.
+    polyint(p)      Finner den integrerte av p. Svaret er en radvektor
+    polyval(p, v)   Beregner verdien av p ved innsetting av verdien v som variabel
+    poly(r)         Lager et polynom som har røtter i vektoren r.
+    conv(a, b)      Beregner polynomproduktet av polynomene med konstanter i vektorene a og b.	
+</pre>
+<p><i>
+Tenkemåten med å erstatte polynomuttrykk med koeffisientvektorer kan bli noe komplisert. Særlig når vi kommer til oppgaver som derivasjon, integrasjon og delbrøkspalting. Slike oppgaver blir mye enklere å takle med Symbolic Toolbox i MATLAB. Se kort intro til slutt.
+</i></p>
+<div class="eksempel">
+<u>Eksempel 1</u><br>
+1) Finn nullpunktene til funksjonen $f(x) = x^2 + 2 x - 3$<br>
+2) Finn ekstremalpunktet til grafen til $f(x)$<br>
+3) Finn det ubestemte integralet $\int \! f(x) \, \mathrm{d}x$<br>
+4) Finn det bestemte integralet av $\int_{-3}^1 \! f(x) \, \mathrm{d}x$
+<pre class="matlab-code">
+>> f = [1 2 -3];
+>> np = roots(f)                            <span class="kom">% Finner nullpunktene i polynomet</span>
+np =
+  -3.00000
+   1.00000
+>> fDer = polyder(f);                       <span class="kom">% Finner den deriverte av plynomfunksjonen</span>
+>> xEkstrem = roots(fDer)                   <span class="kom">% Finner nullpunkt(ene) i den deriverte</span>
+xEkstrem = 
+   -1
+>> yEkstrem = polyval(f, xEkstrem)          <span class="kom">% Beregner funksjonsverdi for x=xEkstrem</span>
+yEkstrem = 
+   -4
+>> intUbestemt = polyint(f)                 <span class="kom">% Finner den ubestemt integrerte av polynomfunksjonen</span>
+intUbestemt =
+   0.33333   1.00000  -3.00000   0.00000
+>> intBestemt = polyval(intUbestemt, np(2)) - polyval(intUbestemt, np(1))
+intBestemt = 
+   -10.667
+</pre>
+<p>
+Kommentarer til eksempel:<br>
+1) Nullpunktene er x=-3 og x=1, slik at polynomet kan faktoriseres til (x+3)(x-1).<br>
+2) Ekstremalpunktet er funnet ved å derivere f(x) og finne nullpunkt for den deriverte, x=-1. Deretter er denne x-verdien satt inn i polynomuttrykket, og funksjonsverdien blir -4. Ekstremalpunkt = (-1, -4).<br>
+3) Det ubestemte integralet blir $\int \! f(x) \, \mathrm{d}x = \frac 1 3 x^3 + x^2 - 3 x + C$<br>
+4) Det bestemte integralet blir $\int_{-3}^1 \! f(x) \, \mathrm{d}x = -10.667 $ = 32/3
+</p>
+</div>
+<div class="oppgaver">
+GJØR DET SELV 11:
+<ol>
+<li>Løs likningen $2 x^3 - 14 x - 12 = 0$</li>
+<li>Faktoriser uttrykket $3 x^4 - 15 x^3 + 15 x^2 + 15 x - 18$</li>
+<li>a) Finn likningen for tangenten til $f(x) = x^2 + 2 x - 3$ for $x = -2$ .<br>
+b) Plot grafen til $f(x)$ og tangenten til $f(x)$ for $x = -2$ i samme figurvindu.</li>
+<li>Gitt funksjonen  $g(x) = x^3 - 6 x^2 + 9 x$<br>
+&nbsp;&nbsp;&nbsp;- Lag grafen til funksjonen fra x=-1 til x=5<br>
+&nbsp;&nbsp;&nbsp;- Finn funksjonsverdiene for  x = -2:7<br>
+&nbsp;&nbsp;&nbsp;- Finn den deriverte av funksjonen<br>
+&nbsp;&nbsp;&nbsp;- Finn topp- og bunnpunkt<br>
+&nbsp;&nbsp;&nbsp;- Finn vendepunkt<br>
+&nbsp;&nbsp;&nbsp;- Beregn arealet under grafen fra x=0 til x=3</li>
+</ol>
+</div>
+<a href="javascript:hideshow(document.getElementById('adiv11'))">Vis/gjem svar</a><br>
+<div id="adiv11" style="display: none">
+2: roots([3 -15 15 15 -18]) gir ans = 3, -1, 2, 1 - og dette er nullpunktene.<br>
+Faktoriseringen skulle da bli (x-3)(x+1)(x-2)(x-1) .<br>
+3: Dette må gjøres i flere trinn, a) finne funksjonsverdi $y_0$ for $x_0 =-2$, b) derivere funksjonen, c) finne den derivertes verdi for $x_0 = -2$, d) sette inn ettpunktsformelen $y - y_0 = k(x - x_0)$ og rydde uttrykket (manuelt).
+</div>
+<p>
+</p>
+<a id="delbrok"></a><div class="subtitle">Delbrøkspalting og polynomdivisjon</div>
+<p>
+Disse operasjonene håndteres av funksjonen <code>residue</code>.
+</p>
+<div class="eksempel">
+<u>Eksempel 2</u><br>
+Polynombrøken&nbsp;&nbsp;&nbsp; $\displaystyle{\frac {x + 14} {x^2 + 3 x - 4}}$ &nbsp;&nbsp;&nbsp; skal spaltes.<br>
+<br>
+Vi legger konstantene i <code>teller</code> og <code>nevner</code> inn i hver sin radvektor, og kommanderer <code>residue(teller,&nbsp;nevner)</code> .
+<p>
+Vel og bra, men her har vi med en funksjon å gjøre som lager tre resultater(!), nemlig
+</p>
+<p>
+- antall hele ganger som nevner går opp i teller, <br>
+- tellerfaktorene for delbrøkene, og<br>
+- polene (nullpunktene for telleren i delbrøkene).
+</p>
+<p>
+Disse tre resultatene må fanges opp til en radvektor der vi setter egne navn på elementene,
+</p>
+<pre class="matlab-code">
+>> teller=[1 14]; nevner=[1 3 -4];
+>> [abc, poler, hele] = residue(teller, nevner)
+abc =                                       <span class="kom">% Tellerkonstantene</span>
+     3                                      <span class="kom">% *) Denne telleren...</span>
+    -2
+poler =                                     <span class="kom">% Nullpunkter i nevnere</span>
+     1                                      <span class="kom">% *) hører sammen med dette nullpunktet</span>
+    -4
+hele = [](0x0)                              <span class="kom">% Antall hele, her er det ingen (tom verdi)</span> 
+</pre>
+<p>
+Resultatet tolker vi til at &nbsp;&nbsp;&nbsp; $\displaystyle{\frac {x + 14} {x^2 + 3 x - 4}} = \frac 3 {x-1} - \frac 2 {x+4} $ 
+</p>
+<p>
+Polynomdivisjon håndteres også av funksjonen <code>residue</code>. Som eksempel tar vi brøken $\displaystyle{\frac {x^2 + 3 x - 4} {x + 2}}$:
+</p>
+<pre class="matlab-code">
+>> teller = [1 3 -4]; nevner = [1 2];
+>> [abc, poler, hele] = residue(teller, nevner)
+abc = -6
+poler = -2
+hele =
+   1   1
+</pre>
+<p>
+Resultatet tolker vi til at &nbsp;&nbsp;&nbsp; $\displaystyle{\frac {x^2 + 3 x - 4} {x + 2} = x + 1 - \frac 6 {x + 2} }$
+</p>
+</div>
+<div class="oppgaver">
+GJØR DET SELV 12:
+<ol>
+<li>Lag delbrøkspalting av $\displaystyle{\frac {x^2 + 7 x} {x^2 - x - 2}}$ &nbsp;&nbsp;&nbsp;Test resultatet.</li>
+<li>Slå opp hjelp for funksjonen <code>residue</code> og finn ut hvordan denne brøksummen
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $\displaystyle{\frac 1 {x+3} - \frac 1 {x+5} + 2}$ &nbsp;kan settes sammen til en felles brøk.</li>
+</ol>
+</div>
+<p>
+</p>
+<a id="likning"></a><div class="subtitle">Likninger</div>
+<p>
+Teorien for løsning av lineære likningssett finner vi i emnet lineær algebra. Her er en kortversjon av metoden som bruker operatoren venstredivisjon.
+</p>
+<p>
+Likningssettet &nbsp;&nbsp;&nbsp;&nbsp;$\begin{array}{cc} 3 x + 4 y = 5 \\ 6 x + 7 y = 8 \end{array}$
+</p>
+<p>
+har en koeffisientmatrise&nbsp;&nbsp;$A = \left [ \begin{array}{cc} 3 & 4 \\ 6 & 7 \end{array} \right ]$&nbsp;&nbsp;og en konstantmatrise&nbsp;&nbsp;$B = \left [ \begin{array}{c} 5 \\ 8 \end{array} \right ]$
+</p>
+<p>
+Vi legger disse to matrisene inn i MATLAB og finner løsningen på likningssettet med kommandoen &nbsp;&nbsp;<code>xy&nbsp;=&nbsp;A&nbsp;\&nbsp;B</code> &nbsp;&nbsp;der vi fanger opp de to løsningen i en vektor.
+</p> 
+
+<pre class="matlab-code">
+>> A = [3 4; 6 7];                          <span class="kom">% Koeffisientmatrise, for venstre side</span>
+>> B = [5; 8];                              <span class="kom">% Konstantmatrise, for høyre side</span>
+>> xy = A\B                                 <span class="kom">% Tilsvarer inv(A)*B</span>
+xy =
+    -1                                      <span class="kom">% xy(1) = -1</span>
+     2                                      <span class="kom">% xy(2) = 2</span>
+</pre>
+<p>
+De to løsningene i kolonnevektoren xy kan vi hente ut ved indeksering, xy(1) og xy(2). Vi kan teste svaret ved innsetting i opprinnelig likning og sjekke at venstre sider blir lik høyre sider. Her vises det ved å hente ut konstantene fra matrise A ved indeksering:
+</p>
+<pre class="matlab-code">
+>> A(1,1)*xy(1) + A(1,2)*xy(2)              <span class="kom">% Det samme som  3*(-1)+4*2</span>
+ans = 5
+>> A(2,1)*xy(1) + A(2,2)*xy(2)              <span class="kom">% Det samme som  6*(-1)+7*2</span>
+ans = 8 
+</pre>
+<p>
+ Det er ikke alle likningssett som har entydige løsninger, og egentlig burde vi ha testet for det. En forutsetning for at metoden med venstredivisjon skal være mulig er at determinanten til konstantmatrisa har verdi ulik null. Her testes determinanten:
+</p>
+<pre class="matlab-code">
+>> A = [3 4; 6 7];
+>> det(A)
+ans = 
+    -3
+</pre>
+<div class="oppgaver">
+GJØR DET SELV 13:
+<ol>
+<li>Løs likningssettet med MATLAB
+$\begin{array}{lcl} x + 2 y + 3 z & = &  0 \\  4 x - 5 y + 6 z & = & 1 \\7 x - 8 y + 9 z & = & - 2 \end{array}$
+og sett prøve på svaret.</li>
+</ol>
+</div>
+
+<a href="javascript:hideshow(document.getElementById('adiv13'))">Vis/gjem svar</a><br>
+<div id="adiv13" style="display: none">
+1: På strak arm: <code>&gt;&gt; xyz = [1 2 3; 4 -5 6; 7 -8 9]\[0; 1; -2]</code>
+</div>
+
+<p>
+</p>
+<a id="tallfol"></a><div class="subtitle">Tallfølger og rekker</div>
+<p>
+En tallfølge er en ordnet samling av elementer som er tall eller andre dataverdier. Elementverdiene kan enten listes opp eller beskrives generelt av en matematisk formel. MATLAB har ikke egen datatype for tallfølger, men en radvektor har omtrent de samme egenskapene. Tallfølgen med oddetall
+fra 1 til 13 kan for eksempel lages slik:
+</p>
+<pre class="matlab-code">
+>> T = 1:2:13                               <span class="kom">% En radvektor fra 1 til 13 med steglengde 2</span>
+T =
+     1    3    5    7    9   11  13
+>> T(3)                                     <span class="kom">% Elementet på 3. posisjon i T</span>
+ans =
+     5
+</pre>
+<p>
+Litt mer avanserte tallfølger kan vi lage om vi kjenner en formel for det generelle leddet. For eksempel vil tallfølgen  {1,&nbsp;1/2,&nbsp;1/3,&nbsp;1/4,&nbsp;...} bestå av heltallene fra 1 og oppover som nevnere og formelen for leddet på n-te plass i følgen er $a_n = \frac 1 n$.<br>
+Altså lager vi først en vektor som holder på verdiene av $n$, og en ny vektor med ledd beregnet av formelen for $a_n$:
+</p>
+<pre class="matlab-code">
+>> n = 1:10;                                 <span class="kom">% En radvektor som indekserer leddene</span>
+>> format rat, a = 1./n                      <span class="kom">% Beregner an etter formelen for generelt ledd</span>
+a = 
+    1    1/2    1/3    1/4    1/5    1/6    1/7    1/8    1/9    1/10
+</pre>
+<p>
+Tallfølgen som lager ledd som stadig halveres i verdi, også kalt en geometrisk rekke med kvotient k=1/2, har slik formel for det generelt leddet, $\displaystyle {b_n = \frac 1 {2^{n-1}}}$
+</p>
+<pre class="matlab-code">
+>> n = 1:10;                                 <span class="kom">% En radvektor som indekserer leddene</span>
+>> format rat, b = 1/2.^(n-1)                <span class="kom">% Beregner bn etter formelen for generelt ledd</span>
+b = 
+    1    1/2    1/4    1/8    1/16    1/32    1/64    1/128    1/256    1/512
+</pre>
+<p>
+Legg merke til at variablene a og b i de to eksemplene ovenfor er rekkevektorer med 10 ledd, og at leddverdiene beregnes med en eneste kommando. Det er grunnen til at det må brukes skalaroperatorer ./ og .^ i beregningene. Visningsformatet er satt til brøkformat, <code> format rat</code>.
+</p>
+<p>
+En rekke er summen av leddene i en tallfølge, iallefall i emnet diskret matematikk. En rekke med elementer slik vi laget i forrige avsnitt har ganske enkelt en sum som beregnes av matrisefunksjonen <code>sum</code>,
+<pre class="matlab-code">
+>> n = 1:10;                                <span class="kom">% En radvektor som indekserer leddene</span>
+>> format rat, b = 1/2.^(n-1);              <span class="kom">% Beregner bn etter formelen for generelt ledd</span>
+>> b_sum = sum(b)                           <span class="kom">% Lager summen av de 10 leddene</span>
+b_sum = 
+    1023/512
+</pre>
+<p>
+Legg merke til at variablene a og b i de to eksemplene ovenfor er rekkevektorer med 10 ledd, og at leddverdiene beregnes med en eneste kommando. Det er grunnen til at det må brukes skalaroperatorer ./ og .^ i beregningene. Visningsformatet er satt til brøkformat, <code> format rat</code>.
+</p>
+<p>
+Her beregnes rekkesummen for de 100 første ledd i en geometrisk rekke med første ledd lik a1=1 og kvotient lik k=-1/2:
+</p>
+<pre class="matlab-code">
+>> n = 1:100;                               <span class="kom">% En radvektor som indekserer leddene</span>
+>> a1 = 1; k = -1/2;
+>> a = a1*k.^(n-1);                         <span class="kom">% Beregne de 100 leddene etter formel for geometrisk rekke</span>
+>> a_sum = sum(a)                           <span class="kom">% Lager summen av de 100 leddene</span>
+a_sum = 
+    2/3                                     <span class="kom">% Det blir ikke eksakt lik 2/3, men vises slik pga. format rat</span>
+</pre>
+<p><i>
+Teorien om rekkesummer inneholer drøftinger av hva summen blir når antall ledd øker mot uendelig (konvergens). Med numerisk MATLAB kan dette selvsagt ikke løses. Ved å lage et passe stort antall ledd i vektoren kan vi likevel få en indikasjon på om rekka konvergerer. Slike problemer overlater vi til Symbolic Toolbox å håndtere.
+</i></p>
+<div class="eksempel">
+<u>Eksempel 3</u><br>
+Et praktisk eksempel på geometrisk rekke er sparing med renter. La oss si at du har gjort en avtale med banken om at det 1. januar hvert år i 7 år skal overføres 5000 kroner til en sparekonto med 5% renter. Hva blir saldo rett etter at det 7. innskuddet er gjort?
+<p>
+Du lager en oversikt:<br>
+Det 7. innskuddet får ikke renter, og gir kr. 5000 til summen<br>
+det 6. innskuddet får 1 års renter, og gir kr. 5000*1.05 til summen<br>
+det 5. innskuddet får 2 års renter, og gir kr. 5000*1.05^2 til summen<br>
+- - -<br>
+det 1. innskuddet får 6 års renter, og gir kr. 5000*1.05^6 til summen
+</p>
+<p>
+De enkelte års bidrag legges i en radvektor – som så summeres,
+</p>
+<pre class="matlab-code">
+>> innskudd=5000; rente=0.05; aar=1:7;
+>> aarlig = innskudd*(1+rente).^(aar-1)
+aarlig = 
+     5000.0   5250.0   5512.5   5788.1   6077.5   6381.4   6700.5
+>> format bank, sum(aarlig)
+ans = 
+     40710.04
+</pre>
+</div>
+<div class="oppgaver">
+GJØR DET SELV 14:
+<ol>
+<li>Regn ut &nbsp;&nbsp;1 + 2 + 3 + ... + 99 + 100 .
+<li>Verdien av $\frac {\pi^2} 6$ kan tilnærmes med rekkesummen<br>
+&nbsp;&nbsp;&nbsp;	1 + 1/4 + 1/9 + 1/16 + 1/25 + ...<br>
+Finn ut hvor stort feil vi gjør ved å beregne $\pi$ med 10 rekkeledd.</li>
+<li>Finn summen av de 77 første ledd i rekkene<br>
+&nbsp;&nbsp;&nbsp;	1 + 1/3 + 1/9 + 1/27 + 1/81 + ...<br>
+&nbsp;&nbsp;&nbsp;	1 - 1/3 + 1/9 - 1/27 + 1/81 - ...</li>
+<li>
+En sprettball slippes fra 1 m og mister 10% høyde for hvert sprett.<br>
+Hvor mange ganger passerer den høyden 10 cm?</li>
+<li>
+Grunntallet <i>e</i> for naturlige logaritmer kan tilnærmes med rekkesummen<br>
+$\frac 1 {0!} + \frac 1 {1!} +\frac 1 {2!} +\frac 1 {3!} + ...$<br>
+Beregn rekkesummen med 10 ledd og sammenlign med <i>e</i>.
+</li>
+</ol>
+</div>
+<a href="javascript:hideshow(document.getElementById('adiv14'))">Vis/gjem svar</a><br>
+<div id="adiv14" style="display: none">
+1: >> sum(1:100)<br>
+2: Tips: nevnerne er kvadrattallene 1^2, 2^2, 3^2, ...<br>
+3: Tips: Ledd nr. n i den første rekka kan beregnes av formelen 1/3^(n-1)<br>
+Ledd nr. n i den andre rekka kan beregnes av formelen 1/(-3)^(n-1) .<br>
+4: Spørsmålet er kanskje litt vanskelig å tolke. Høyden 10 cm passeres både på ned- og opptur noen ganger, men etter en stund vil oppturen ikke nå 10 cm. Jeg skulle mene at det blir 43 ganger. Hvis du tester med en ball med mindre futt, for eksempel at den halverer neste høyde, vil det bli lettere å telle.<br>
+5: >> sum(1./factorial(0:9))
+</div>
+<p>
+</p>
+<a id="symbols"></a><div class="subtitle">Symbolsk matematikk med MATLAB</div>
+<p>
+MATLAB er ekspert på å sjonglere med matriser og tall med stor nøyaktighet. Algebra og calculus dreier seg om å behandle 'ukjente' størrelser og funksjoner av disse på generell form. Tilleggspakken Symbolic Toolbox tar seg av det.<br>
+Resultatene fra symbolske beregninger kan spille sammen med den numeriske delen - derfor er det nødvendig å forstå MATLABs tenkemåte med datalagring i matriser, vektorer og skalarer for å for å løse algebraiske problemer. Inntasting av uttrykk og visning av resultater gjøres på enlinje form.
+</p>
+<p>
+Dette lynkurset gir bare en ørliten intro til symbolsk matematikk, først en generell likningsløser, så en typisk oppgave fra calculus.<br>
+Her er noen smakebiter av de vanligste funksjonene i Symbolic Toolbox:
+</p>
+<pre class="blank">
+    syms x, y, z                     <span class="kom">% Definerer symbolske variable. Viser definerte symbolske variable.</span>
+    f(x) = x^2*exp(x)                <span class="kom">% Definerer en funksjon med x som variabel</span>
+    diff(f), diff(f, n)              <span class="kom">% Deriverer f, finner n-te derivert av f</span>
+    int(f), inf(f, a, b)             <span class="kom">% Integrerer f ubestemt, integrerer f fra a til b</span>
+    limit(1/2^(n-1), n, inf)         <span class="kom">% Finner grenseverdi av uttrykket når n går mot uendelig</span>
+    symsum(1/2^(n-1), n, 1, inf)     <span class="kom">% Finner rekkesummen</span>
+    solve()                          <span class="kom">% Generell likningsløser, også ulikheter</span>
+    factor()                         <span class="kom">% Faktoriserer</span>
+    expand()                         <span class="kom">% Utvider, multipliserer ut</span>
+    collect()                        <span class="kom">% Samler ledd med samme eksponent</span>
+    simplify()                       <span class="kom">% Lager forenklinger, sammentrekkinger, forkortinger</span>
+    eval()                           <span class="kom">% Evaluerer, beregner symbolske verdier</span>	
+</pre>
+<div class="eksempel">
+<u>Eksempel 4</u><br>
+a) Trekk sammen &nbsp;&nbsp;&nbsp;&nbsp;$ \displaystyle {1 + \frac {2 - \frac 3 4} {5 + \frac 6 7}} = $<br>
+b) Finn vinkelen i radianer som har $ - \frac 1 {\sqrt 2}$ som cosinus-verdi.<br>
+c) Løs likningen &nbsp;&nbsp;&nbsp;&nbsp;$3 x + 4 = 5 x - 6$<br>
+d) Løs det ikke-lineære likningssettet &nbsp;&nbsp;&nbsp;&nbsp;$\begin{array}{cc} x + y = 3 \\ x + y^2 = 5 \end{array}$<br>
+e) Faktoriser uttrykket &nbsp;&nbsp;&nbsp;&nbsp;$2 x^4 + 6 x^3 - 6 x^2 - 14 x+12$
+</div>
+<p>
+a) b) Når vi ønsker svar i form av heltallsbrøker, kvadratrøtter og andre 'eksakte' verdier kan vi styre MATLAB til å tenke symbolsk ved å legge uttrykket inn med funksjonen <code>sym</code>:
+ </p>
+<pre class="matlab-code">
+>> sym(1+(2-3/4)/(5+6/7))
+ans =
+199/164
+>> vinkel = sym(acos(-1/sqrt(2)))         
+vinkel =                                    <span class="kom">% vinkel blir en symbolsk variabel</span>
+(3*pi)/4 
+>> eval(vinkel)                             <span class="kom">% vinkel evalueres til et tall</span>
+ans =
+    2.3562
+</pre>
+<p>
+c) Her har vi med en symbolsk variabel x å gjøre, denne må først defineres. Likhetstegnet i likningen må settes inn som dobbelt likhetstegn, fordi vanlig likhetstegn er en tilordningsoperator. Resultatet som funksjonen solve kommer med legges i en navngitt variabel Sx:
+</p>
+<pre class="matlab-code">
+>> syms x
+>> Sx = solve(3*x + 4 == 5*x - 6)
+Sx =
+5
+</pre>
+<p>
+d) Her har vi med to symbolske variabler x og y å gjøre, disse må først defineres. Et slikt likningssett har vanligvis løsning i form at et sett med to verdier, disse kan vi fange opp i en vektor [Sx, Sy]: 
+</p>
+<pre class="matlab-code">
+>> syms x y
+>> [Sx, Sy] = solve(x + y == 3, x + y^2 == 5)
+Sx =
+ 1
+ 4
+Sy =
+  2
+ -1
+ </pre>
+ <p>
+ Det er to sett med løsninger, x=1 og y=2 er løsning, og x=4 og y=-1 er også løsning. Vi kan teste om løsningene stemmer. Setter inn for x og y - som er elementer i vektorene Sx og Sy - i venstre side i likningene. Får vi likhet med høyre side har vi en riktig løsning. Dette må vi gjøre med begge settene av løsninger:
+ </p>
+<pre class="matlab-code">
+>> L1VSa = Sx(1) + Sy(1), L2VSa = Sx(1) + Sy(1)^2
+L1VSa =                                     <span class="kom">% Venstre sider sin verdi for x=Sx(1) og y=Sy(1)</span>
+3
+L2VSa =
+5
+>> L1VSb = Sx(2) + Sy(2), L2VS = Sx(2) + Sy(2)^2
+L1VSb =                                     <span class="kom">% Venstre sider sin verdi for x=Sx(2) og y=Sy(2)</span>
+3
+L2VS =
+5
+</pre>
+<p>
+e) Faktorisering skjer med funksjonen <code>factor</code>. Her velges det å la uttrykket som skal faktoriseres bli tilordnet en (automatisk) sympolsk variabel p:
+ </p>
+<pre class="matlab-code">
+>> syms x; p = 2*x^4+6*x^3-6*x^2-14*x+12;
+>> factor(p)
+ans =
+2*(x + 3)*(x + 2)*(x - 1)^2
+</pre>
+<div class="eksempel">
+<u>Eksempel 5</u><br>
+Gitt funksjonen  $f(x) = x^3 - 6 x^2 + 9 x$<br>
+&nbsp;&nbsp;&nbsp; a) Lag grafen til funksjonen fra x=-1 til x=5<br>
+&nbsp;&nbsp;&nbsp; b) Finn funksjonsverdiene for &nbsp; x = -2:7<br>
+&nbsp;&nbsp;&nbsp; c) Finn den deriverte av funksjonen<br>
+&nbsp;&nbsp;&nbsp; d) Finn topp- og bunnpunkt<br>
+&nbsp;&nbsp;&nbsp; e) Finn vendepunkt<br>
+&nbsp;&nbsp;&nbsp; f) Beregn arealet under grafen fra x=0 til x=3
+</div>
+<p>
+a) Vi gir MATLAB beskjed om å bruke symbolske variabler som defineres med funksjonen symbolic eller kortformen
+syms. En funksjon defineres som vi er vant til fra mattetimene,
+</p>
+<pre class="matlab-code">
+>> syms x                                   <span class="kom">% Lager en symbolsk variabel</span>
+>> f(x) = x^3 - 6*x^2 + 9*x                 <span class="kom">% Definerer f(x) som symbolsk funksjon</span>
+f(x) =
+x^3 - 6*x^2 + 9*x
+</pre>
+<p>
+Grafen kan lages på samme måte som vist tidligere, men det finnes alternativer, her vist med funksjonen ezplot:
+</p>
+<pre class="matlab-code">
+>> ezplot(f, [-1, 5])                       <span class="kom">% GJØR DET SELV!</span>
+</pre>
+<p>
+b) Funksjonsverdiene finnes ved å sette en radvektor med verdier inn for x:
+</p>
+<pre class="matlab-code">
+>> f_verdier = f(-2:7)                      <span class="kom">% Beregner funksjonsverdi for x = -2, -1, 0, 1, ..., 7</span>
+f_verdier =
+[ -50, -16, 0, 4, 2, 0, 4, 20, 54, 112]
+</pre>
+<p>
+Det er en god regel å legge resultatet av beregninger inn i en variabel, her <code>f_verdier</code>. På den måten kan vi referere til verdiene i senere beregninger. Vi ser også at vektorer (og matriser) i symbolsk MATLAB blir satt inn mellom klammeparenteser i svarene.
+</p>
+<p>
+c) Den deriverte finnes med funksjonen diff:
+</p>
+<pre class="matlab-code">
+>> fDif = diff(f)                           <span class="kom">% Deriverer f(x) og setter navnet fDif på resultatet</span>
+fDif(x) =
+3*x^2 - 12*x + 9
+</pre>
+<p>
+Vi ser at den deriverte av f(x) også blir en funksjon av x, her fDif(x). Den deriverte kan da beregnes for ulike x-verdier ved innsetting.
+</p>
+<p>
+d) Toppunktet kan ikke finnes med en enkelt kommando, men vi kan drøfte funksjonen på vanlig måte - først finne nullpunkter for den deriverte, og så avgjøre om de gir min- eller maks-verdier:
+</p>
+<pre class="matlab-code">
+>> np_fDif = solve(fDif == 0)               <span class="kom">% Nullpunkter for den deriverte, bruker symbolsk likningsløser</span>
+np_fDif =                                   <span class="kom">% Nullpunktene ligger i vektoren np_fDif</span>
+ 1
+ 3
+>> fDif2 = diff(f, 2)                       <span class="kom">% Den andrederiverte av f(x) kalles fDif2</span>
+fDif2(x) =
+6*x - 12
+</pre>
+<p>
+Vi ser nå at den deriverte av f(x) har to nullpunkter som er lagt inn i vektoren np_fDif. Videre har vi funnet den andrederiverte som funksjonen fDif2(x). Setter så x-verdiene for nullpunktene i den deriverte av f(x) inn i fDif2(x) for å finne fortegnet til krumningene,
+</p>
+<pre class="matlab-code">
+>> krum_ft = fDif2(np_fDif)                 <span class="kom">% Den andrederivertes verdier for nullpunktene til den deriverte</span>
+krum_ft =                                   <span class="kom">% Fortegnet til verdiene forteller om krumningens retning</span>
+ -6
+  6
+</pre>
+<p>
+Nå begynner det kanskje å bli en smule kryptisk. Den siste kommandoen setter altså de to x-verdiene 1 og 3 inn for x i den andrederiverte og viser at x=1 gir et toppunkt (fordi krumningen er negativ), og tilsvarende et bunnpunkt for x=3. De to x-verdiene settes også inn i f(x) slik at vi finner koordinatene for topp- og bunnpunkt:
+</p>
+<pre class="matlab-code">
+>> np_fDif, topp_bunn = f(np_fDif)
+np_fDif =                                   <span class="kom">% x-koordinater for</span>
+ 1                                          <span class="kom">%   topp</span>
+ 3                                          <span class="kom">%   bunn</span>
+topp_bunn =                                 <span class="kom">% y-koordinater for</span>
+ 4                                          <span class="kom">%   topp</span>
+ 0                                          <span class="kom">%   bunn</span>
+</pre>
+<p>
+e) Vendepunktet er der den andrederiverte (grafens krumning) skifter fortegn. Velger her å finne dette ved å løse ulikheten fDif2(x)&nbsp;>&nbsp;0 ,
+</p>
+<pre class="matlab-code">
+>> solve(fDif2(x) > 0)
+ans =
+Dom::Interval(2, Inf)
+</pre>
+<p>
+Grafen har positiv krumning for x &gt; 2, har verdien 0 for x = 2 - og negativ krumning for x &lt; 2, altså et vendepunkt. Koordinatene beregnes ved innsetting,
+</p>
+<pre class="matlab-code">
+>> x_vp = solve(fDif2(x) == 0)
+x_vp =
+2
+>> y_vp = f(x_vp)
+y_vp =
+2
+</pre>
+<p class="oppgaver">
+<p>
+f) Det bestemte integralet fra x=0 til x=3 finnes med funksjonen <code>int</code>,
+</p>
+<pre class="matlab-code">
+>> fInt = int(f(x), 0, 3)
+fInt =
+27/4
+</pre>
+<p>
+Når vi har med symbolske uttrykk å gjøre vil vi få svar med kvadratrøtter, heltallsbrøker, eksponenter, pi, e, og andre formelelementer. Svarene på enlinje form kan da bli noe vanskelig å se for seg som 2D uttrykk. Til hjelp kan du bruke funksjonen pretty - som lager enkel bokstavgrafikk av svaret, eller funksjonen latex som gir LaTeX code til bruk i tekstbehandlere.
+</p>
+<pre class="matlab-code">
+>> sym(acos(-1/sqrt(2)))
+ans =
+(3*pi)/4
+>> pretty(ans)
+
+  3 pi 
+  ---- 
+   4
+
+>> latex(sym(acos(-1/sqrt(2))))
+ans =
+\frac{3\, \pi}{4}
+</pre>
+<p>
+Når du blir litt dreven i enlinje syntaks blir du fort vant til å 'se' hvordan uttrykket er satt opp. Koden som latex gir ser slik ut i tekstbehandler: $\displaystyle{\frac{3\, \pi}{4}}$
+</p>
+<div class="oppgaver">
+GJØR DET SELV 15:
+<ol>
+<li>Faktoriser uttrykket med symbolsk MATLAB: &nbsp;$3 x^4 - 15 x^3 + 15 x^2 + 15 x - 18$</li>
+<li>Løs likningssettet med symbolsk MATLAB
+\begin{array}{lcl} x + 2 y + 3 z & = &  0 \\  4 x - 5 y + 6 z & = & 1 \\7 x - 8 y + 9 z & = & - 2 \end{array}
+og sett prøve på svaret.</li>
+<li>Finn verdien av uttrykket&nbsp;&nbsp;$\displaystyle{\frac{x^2}{x+3}}+\frac{35 x -6}{x^2 + 5 x+6}$ &nbsp;&nbsp; for x = 3.
+</li>
+<li>Trekk sammen uttrykket&nbsp;&nbsp;$\displaystyle{\frac{x^2}{x+3}+\frac{35 x -6}{x^2 + 5 x+6} - \frac{8 x}{x+2}}$ &nbsp;&nbsp; til en brøk med faktorisert nevner og teller (om mulig).
+</li>
+<li>Løs likningen $\displaystyle{\frac{x^2}{x+3}+\frac{35 x -6}{x^2 + 5 x+6} = \frac{8 x}{x+2}}$
+</li>
+<li>
+Funksjonen &nbsp;&nbsp;$f(x) = e^{-x} \cdot \sqrt x$ &nbsp;&nbsp;har et ekstremalpunkt og en vendetangent.<br>
+Finn disse.
+</li>
+<li>Lag delbrøkspalting av $\displaystyle{\frac {x^2 + 7 x} {x^2 - x - 2}}$ &nbsp;&nbsp;&nbsp;Test resultatet.</li>
+</ol>
+</div>
+<a href="javascript:hideshow(document.getElementById('adiv15'))">Vis/gjem svar</a><br>
+<div id="adiv15" style="display: none">
+7: Uffda, dette blir litt kronglete med funksjonen residue som i numerisk MATLAB. I stedet kan vi gjøre et triks: først integrere polynombrøken, og deretter derivere resultatet. Da skulle vi være tilbake til samme uttrykk, men på veien dit har MATLAB internt brukt delbrøkspalting. Prøv:<br>
+<code>>> syms x; B = (x^2+7*x)/(x^2-x-2);</code><br>
+<code>>> diff(int(B))</code>
+</div>
+<p>
+EXTRA<br>
+Symbolske beregninger blir utført i MuPAD som også er en selvstendig app i MATLAB. Taster du kommandoen <code>mupad</code> eller velger APPS/MuPAD Notebook fra menyen får du en selvstendig, menystyrt app til symbolske beregninger,
+</p>
+<img src="http://www.mathworks.com/help/symbolic/mupad_ug/first-steps-command-bar-2d.png" alt="MuPAD" style="width:782px;height:576px">
+<p>
+En tilsvarende mulighet har vi ikke med GNU Octave, men som en erstatning kan <a href="http://maxima.sourceforge.net/download.html">Maxima</a> gjøre omtrent samme nytte.
+</p>
+
+<script type="text/javascript">
+function hideshow(which){
+if (!document.getElementById)
+return
+if (which.style.display=="block")
+which.style.display="none"
+else
+which.style.display="block"
+}
+</script>
+
+</body>
+</html>
